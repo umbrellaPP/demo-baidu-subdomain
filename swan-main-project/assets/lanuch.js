@@ -16,18 +16,18 @@ cc.Class({
         let systemInfo =  swan.getSystemInfoSync();
         let width = systemInfo.windowWidth;
         let height = systemInfo.windowHeight;
-        // https://developers.weixin.qq.com/minigame/dev/document/open-api/user-info/swan.createUserInfoButton.html
+        
         let button = swan.createUserInfoButton({
             type: 'text',
             text: '获取用户信息',
             style: {
-                left: width * 0.33,
-                top: height * 0.81,
-                width: width * 0.13,
-                height: height * 0.1,
+                left: 0,
+                top: -height,  // hide label on button, because label can't be hidden on mobile
+                width: width,
+                height: height * 2,
                 lineHeight: 40,
-                backgroundColor: '#eeeeee',
-                color: '#000000',
+                backgroundColor: 'rgba(0,0,0,0)',
+                color: 'rgba(0,0,0,0)',
                 textAlign: 'center',
                 fontSize: 10,
                 borderRadius: 3
@@ -38,20 +38,21 @@ cc.Class({
         let _self = this;
         button.onTap((res) => {
             if (userInfo) return;
-            switch(res.errmsg) {
-                case 'getUserInfo:ok': 
-                    userInfo = res.userInfo;
-                    let nickName = userInfo.nickName;
-                    let avatarUrl = userInfo.avatarUrl;
-                    _self.setUserConfig(nickName, avatarUrl);
-
-                    swan.getOpenDataContext().postMessage({
-                        message: "User info get success."    
-                    });
-                default:
-                    this.setTips(res.errmsg);
-                    break;
+            
+            if (res.errmsg) {
+                _this.setTips(res.errmsg);
             }
+            else if (res.userInfo) {
+                userInfo = res.userInfo;
+                let nickName = userInfo.nickName;
+                let avatarUrl = userInfo.avatarUrl;
+                _self.setUserConfig(nickName, avatarUrl);
+                swan.getOpenDataContext().postMessage({
+                message: "User info get success."
+                });
+            }
+
+            button.hide();
         });
     },
 

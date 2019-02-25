@@ -13,33 +13,33 @@ cc.Class({
             console.log(data.message);
         });
 
-        // https://developers.weixin.qq.com/minigame/dev/document/open-api/data/swan.getUserInfo.html
-        swan.getUserInfo({
-            swanIdList: ['selfSwanId'],
+        // get user info in main context
+        // swan.getUserInfo({
+        //     swanIdList: ['selfSwanId'],
+        //     success: (res) => {
+        //         console.log('success', res.data);
+        //         let userInfo = res.data[0];
+        //         _self.createUserBlock(userInfo);
+        //     },
+        //     fail: (res) => {
+        //         console.error(res);
+        //     }
+        // });
+
+        swan.getFriendCloudStorage({
+            keyList: ['selfSwanId'],
             success: (res) => {
                 console.log('success', res.data);
-                let userInfo = res.data[0];
-                _self.createUserBlock(userInfo);
-            },
-            fail: (res) => {
-                reject(res);
-            }
-        });
-        
-        // https://developers.weixin.qq.com/minigame/dev/document/open-api/data/swan.getFriendCloudStorage.html
-        swan.getFriendCloudStorage({
-            keyList: ['key'],
-            success: function (res) {
-                for (let i = 0; i < 3; i++) {
-                    let friendInfo = res.data[i];
-                    if (!friendInfo) {
+                for (let i = 0; i < 6; ++i) {
+                    let userInfo = res.data[i];
+                    if (!userInfo) {
                         _self.createPrefab();
                         continue;
                     }
-                    _self.createUserBlock(friendInfo);
+                    _self.createUserBlock(userInfo);
                 }
             },
-            fail: function (res) {
+            fail: (res) => {
                 console.error(res);
             }
         });
