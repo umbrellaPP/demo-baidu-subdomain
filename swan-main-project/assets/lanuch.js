@@ -58,11 +58,14 @@ cc.Class({
 
     onClick () {
         this._isShow = !this._isShow;
+        let comp = this.display.getComponent(cc.SwanSubContextView);
         if (this._isShow) {
             this.display.runAction(this._show);
+            comp.enabled = true;
         }
         else {
             this.display.runAction(this._hide);
+            comp.enabled = false;
         }
     },
 
