@@ -44,7 +44,7 @@ cc.Class({
             }
             else if (res.userInfo) {
                 userInfo = res.userInfo;
-                let nickName = userInfo.nickName;
+                let nickName = userInfo.nickName || userInfo.nickname;
                 let avatarUrl = userInfo.avatarUrl;
                 _self.setUserConfig(nickName, avatarUrl);
                 swan.getOpenDataContext().postMessage({
