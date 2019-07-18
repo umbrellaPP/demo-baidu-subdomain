@@ -9,6 +9,10 @@ cc.Class({
     },
 
     start () {
+        this.forceLogin(this.init.bind(this));
+    },
+
+    init () {
         this._isShow = true;
         this._show = cc.moveTo(0.5, 0, 110);
         this._hide = cc.moveTo(0.5, 0, 1000);
@@ -56,6 +60,42 @@ cc.Class({
         });
     },
 
+    forceLogin (cb) {
+        try {
+            let isLogin = swan.isLoginSync().isLogin;
+            if (!isLogin) {
+                swan.login({
+                    success (res) {
+                        cc.log('success login', res);
+                        cb && cb();
+                    },
+                    fail (res) {
+                        swan.showModal({
+                            title: "登录失败",
+                            content: "是否重新登录？",
+                            cancelText: "退出游戏",
+                            success: function (res) {
+                                if (res.confirm) {
+                                    cc.log("confirm");
+                                    baiduLogin();
+                                }
+                                else if (res.cancel) {
+                                    cc.log("cancel");
+                                    swan.exit();
+                                }
+                            }
+                        });
+                    },
+                })
+            } else {
+                cc.log('Already login');
+                cb && cb();
+            }
+        } catch (err) {
+            cc.error('Login failed', err);
+        }
+    },
+
     onClick () {
         this._isShow = !this._isShow;
         let comp = this.display.getComponent(cc.SwanSubContextView);
@@ -78,7 +118,7 @@ cc.Class({
             url: avatarUrl,
             type: 'png'
         }, (err, texture) => {
-            if (err) console.error(err);
+            if (err) cc.error(err);
             userAvatarSprite.spriteFrame = new cc.SpriteFrame(texture);
         });
     },
