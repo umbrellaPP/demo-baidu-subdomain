@@ -125,5 +125,17 @@ cc.Class({
 
     setTips (str) {
         this.label.string = str;
-    }
+    },
+
+    zoomInSubContextView () {
+        this.display.runAction(cc.scaleBy(.2, 1.2));
+    },
+
+    zoomOutSubContextView () {
+        this.display.runAction(cc.scaleBy(.2, .8));
+    },
+
+    resetSubContextViewSize () {
+        this.display.runAction(cc.scaleTo(.2, 1));
+    },
 });
